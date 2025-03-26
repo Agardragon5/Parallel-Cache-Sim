@@ -1,6 +1,6 @@
 Multicore Cache Simulator
 Steven Guo and Mihail Alexandrov
-Project URL: 
+
 
 Summary:
 Our project idea revolves around developing a multicore processor and cache simulator that can accurately model the behavior of a multi-core CPU system, including its cache hierarchy and memory coherence protocols. The primary goal is to create a tool that simulates the execution of a program across multiple cores while providing detailed statistics on cache performance, coherence overhead, stall times, and other critical metrics. 
