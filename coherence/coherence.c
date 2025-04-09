@@ -88,7 +88,8 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
 {
     if (processorNum < 0 || processorNum >= processorCount)
     {
-        // ERROR
+        //error 
+        fprintf(stderr, "error in busReq"); 
     }
 
     coherence_states currentState = getState(addr, processorNum);
@@ -98,11 +99,10 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
     switch (cs)
     {
         case MI:
-            nextState
-                = snoopMI(reqType, &ca, currentState, addr, processorNum);
+            nextState = snoopMI(reqType, &ca, currentState, addr, processorNum);
             break;
         case MSI:
-            // TODO: Implement this.
+            nextState = snoopMSI(reqType, &ca, currentState, addr, processorNum); 
             break;
         case MESI:
             // TODO: Implement this.
@@ -152,6 +152,8 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
     if (processorNum < 0 || processorNum >= processorCount)
     {
         // ERROR
+        fprintf(stderr, "you fucked up\n");
+        exit(15418);
     }
 
     coherence_states currentState = getState(addr, processorNum);
@@ -166,6 +168,8 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
             break;
 
         case MSI:
+            nextState = cacheMSI(is_read, &permAvail, currentState, addr, 
+                                 processorNum); 
             // TODO: Implement this.
             break;
 
@@ -199,6 +203,7 @@ uint8_t invlReq(uint64_t addr, int processorNum)
     if (processorNum < 0 || processorNum >= processorCount)
     {
         // ERROR
+        fprintf(stderr, "error in invlReq"); 
     }
 
     currentState = getState(addr, processorNum);
@@ -217,8 +222,14 @@ uint8_t invlReq(uint64_t addr, int processorNum)
             break;
 
         case MSI:
-            // TODO: Implement this.
+            nextState = INVALID;
+            if (currentState != INVALID)
+            {
+                inter_sim->busReq(DATA, addr, processorNum);
+                flush = 1;
+            }
             break;
+
         case MESI:
             // TODO: Implement this.
             break;
