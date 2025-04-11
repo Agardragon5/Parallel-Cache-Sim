@@ -11,9 +11,10 @@ typedef enum _coherence_states
     UNDEF = 0, // As tree find returns NULL, we need an unused for NULL
     MODIFIED,
     INVALID,
+    EXCLUSIVE,
     SHARED_STATE,
     INVALID_MODIFIED,
-    INVALID_SHARED
+    INVALID_SHARED,
 } coherence_states;
 
 typedef enum _coherence_scheme
