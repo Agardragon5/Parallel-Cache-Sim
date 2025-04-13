@@ -2,7 +2,7 @@
 
 # Configuration (edit these if needed)
 CONFIG="ex_coher.config"
-CACHE="simpleCache"
+CACHE="refCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
