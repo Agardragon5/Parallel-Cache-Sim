@@ -105,6 +105,7 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
             nextState = snoopMSI(reqType, &ca, currentState, addr, processorNum); 
             break;
         case MESI:
+            nextState = snoopMESI(reqType, &ca, currentState, addr, processorNum);
             // TODO: Implement this.
             break;
         case MOESI:
@@ -174,6 +175,8 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
             break;
 
         case MESI:
+            nextState = cacheMESI(is_read, &permAvail, currentState, addr, 
+                                  processorNum); 
             // TODO: Implement this.
             break;
 
@@ -231,9 +234,13 @@ uint8_t invlReq(uint64_t addr, int processorNum)
             break;
 
         case MESI:
+            if (currentState != INVALID)
+            {
+                inter_sim->busReq(DATA, addr, processorNum);
+                flush = 1;
+            }
             // TODO: Implement this.
             break;
-
         case MOESI:
             // TODO: Implement this.
             break;
