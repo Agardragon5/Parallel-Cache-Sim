@@ -96,6 +96,8 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
     coherence_states nextState;
     cache_action ca;
 
+    printf("busReq(req = %i, addr = %x, proc = %i): ", reqType, addr, processorNum); 
+
     switch (cs)
     {
         case MI:
@@ -156,6 +158,8 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
         fprintf(stderr, "you fucked up\n");
         exit(15418);
     }
+
+    printf("permReq(req = %i, addr = %x, proc = %i): ", is_read, addr, processorNum); 
 
     coherence_states currentState = getState(addr, processorNum);
     coherence_states nextState;
