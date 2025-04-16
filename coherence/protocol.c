@@ -76,7 +76,8 @@ cacheMSI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
                 return SHARED_STATE;
             } else {
                 printf("SHARED_STATE -> MODIFIED \n");
-                sendBusWr(addr, procNum);
+                // sendData(addr, procNum); 
+                sendBusRd(addr, procNum);
                 return MODIFIED;
             }
         case MODIFIED:
@@ -86,13 +87,15 @@ cacheMSI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
             return MODIFIED;
         // all the following mean something has gone wrong
         case INVALID_MODIFIED:
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            printf("INVALID_MODIFIED -> INVALID_MODIFIED"); 
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
             *permAvail = 0;
             return INVALID_MODIFIED;
         case INVALID_SHARED:
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            printf("INVALID_SHARED -> INVALID_SHARED \n"); 
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
             *permAvail = 0;
             return INVALID_SHARED;
         default:

@@ -1,8 +1,13 @@
 #!/bin/bash
+#This is the bash script to run all traces located in traces/coher 
 
-# Configuration (edit these if needed)
+# Configuration 
+# These are the parameters you can modify to change what parts you're running 
+# with. To run the different coherence protocols, you need to modify the 
+# ex_coher.config file with the number next to __coherence -s num. Num can be 
+# a value 0-4 where 0 is MI, 1 is MSI, 2 is MESI, 3 is MOESI, and 4 is MESIF. 
 CONFIG="ex_coher.config"
-CACHE="refCache"
+CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
@@ -21,9 +26,15 @@ for protocol_dir in "$TRACE_ROOT"/*/; do
         trace_name=$(basename "$trace_file")
         echo "Running trace: $trace_name"
         
+        #Actual script to run (for individual tests)
+        #Ex: ./cadss-engine -s ex_coher.config -c simpleCache -p refProcessor
+        # -t traces/coher/msi_multiple_lines/p2.trace -m refMemory -b refBranch -v 
+        # can use -h for more info 
         ./cadss-engine -s "$CONFIG" -c "$CACHE" -t "$trace_file" \
                       -p "$PROCESSOR" -b "$BRANCH" -m "$MEMORY" \
-                      -o "$COHERENCE" -v
+                      -o "$COHERENCE" \
+                      -v 
+                      #delete the -o "$COHERENCE line if you don't want to run with reference"
         
         echo "-----"
     done
