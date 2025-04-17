@@ -32,7 +32,7 @@ for protocol_dir in "$TRACE_ROOT"/*/; do
         # can use -h for more info 
         ./cadss-engine -s "$CONFIG" -c "$CACHE" -t "$trace_file" \
                       -p "$PROCESSOR" -b "$BRANCH" -m "$MEMORY" \
-                      -o "$COHERENCE" -v 
+                      -v 
                       #delete the -o "$COHERENCE line if you don't want to run with reference"
         
         echo "-----"
