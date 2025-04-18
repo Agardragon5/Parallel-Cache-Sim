@@ -7,12 +7,14 @@
 # ex_coher.config file with the number next to __coherence -s num. Num can be 
 # a value 0-4 where 0 is MI, 1 is MSI, 2 is MESI, 3 is MOESI, and 4 is MESIF. 
 CONFIG="ex_coher.config"
+NUM_PROCESSORS="4" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
 COHERENCE="refCoherence"
-TRACE_ROOT="traces/coher"  # Parent folder containing simple/, msi_simple/, etc.
+TRACE_ROOT="traces/coher" 
+ # Parent folder containing simple/, msi_simple/, etc.
 
 echo "Running all coherence protocol tests..."
 
@@ -20,21 +22,9 @@ echo "Running all coherence protocol tests..."
 for protocol_dir in "$TRACE_ROOT"/*/; do
     protocol_name=$(basename "$protocol_dir")
     echo "=== Testing protocol: $protocol_name ==="
-    
-    # Inner loop: Run each trace file in the current protocol directory
-    # for trace_file in "$protocol_dir"/*.trace; do
-    # trace_name=$(basename "$trace_file")
-    # echo "Running trace: $trace_name"
-    
-    #Actual script to run (for individual tests)
-    #Ex: ./cadss-engine -s ex_coher.config -c simpleCache -p refProcessor
-    # -t traces/coher/msi_multiple_lines/p2.trace -m refMemory -b refBranch -v 
-    # can use -h for more info 
-    ./cadss-engine -n 4 -s "$CONFIG" -c "$CACHE" -t "$protocol_dir" \
+    ./cadss-engine -n "$NUM_PROCESSORS" -s "$CONFIG" -c "$CACHE" -t "$protocol_dir" \
                     -p "$PROCESSOR" -b "$BRANCH" -m "$MEMORY" \
                     -v 
-                    #delete the -o "$COHERENCE line if you don't want to run with reference"
-    
     echo "-----"
     # done
 done
