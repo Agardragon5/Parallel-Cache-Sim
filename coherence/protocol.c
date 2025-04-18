@@ -337,18 +337,18 @@ snoopMSI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
         case SHARED_STATE: // indicate that data is shared 
             sendData(addr, procNum);
             if (reqType == BUSWR) {
-                printf("SHARED_STATE -> INVALID \n"); 
+                printf("SHARED -> INVALID \n"); 
                 // if another processor tries to write, invalidate line
                 *ca = INVALIDATE;
                 return INVALID;
             } 
-            printf("SHARED_STATE -> SHARED_STATE \n"); 
+            printf("SHARED -> SHARED \n"); 
             // otherwise, just keep going
             return SHARED_STATE;
         case MODIFIED:
             sendData(addr, procNum); // send data to cache requesting it
             if (reqType == BUSRD) {
-                printf("MODIFIED -> SHARED_STATE \n");
+                printf("MODIFIED -> SHARED \n");
                 return SHARED_STATE; // go to shared state
             } 
             printf("MODIFIED -> INVALID \n");
@@ -421,7 +421,7 @@ snoopMESI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
         // same as with MSI, except with indicateShared 
         case MODIFIED:
             if (reqType == BUSRD) { 
-                printf("MODIFIED -> SHARED_STATE \n");
+                printf("MODIFIED -> SHARED \n");
                 indicateShared(addr, procNum);
                 return SHARED_STATE;
             }
