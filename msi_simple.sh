@@ -7,13 +7,13 @@
 # ex_coher.config file with the number next to __coherence -s num. Num can be 
 # a value 0-4 where 0 is MI, 1 is MSI, 2 is MESI, 3 is MOESI, and 4 is MESIF. 
 CONFIG="ex_coher.config"
-NUM_PROCESSORS="4" 
+NUM_PROCESSORS="2" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
 COHERENCE="refCoherence"
-TRACE_ROOT="traces/coher" 
+TRACE_ROOT="traces/coher/msi" 
  # Parent folder containing simple/, msi_simple/, etc.
 
 echo "Running all coherence protocol tests..."
@@ -24,7 +24,8 @@ for protocol_dir in "$TRACE_ROOT"/*/; do
     echo "=== Testing protocol: $protocol_name ==="
     ./cadss-engine -n "$NUM_PROCESSORS" -s "$CONFIG" -c "$CACHE" -t "$protocol_dir" \
                     -p "$PROCESSOR" -b "$BRANCH" -m "$MEMORY" \
-                    -v 
+                    # -o "$COHERENCE" \
+                    # -v 
     echo "-----"
     # done
 done

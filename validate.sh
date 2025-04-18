@@ -7,7 +7,7 @@ CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
-TRACE_ROOT="traces/coher" 
+TRACE_ROOT="traces/coher/msi" 
 compare_outputs() {
     local protocol_dir=$1
 
@@ -25,7 +25,7 @@ compare_outputs() {
     echo "=== DIFFERENCES ==="
     diff -y <(echo "$ref_output") <(echo "$custom_output") \
     --ignore-trailing-space --ignore-space-change \
-    --ignore-blank-lines| head -n 20
+    --ignore-blank-lines| head -n 30
     echo "=================="
     echo ""
 }
