@@ -360,7 +360,6 @@ snoopMSI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
             // otherwise, just keep going
             return SHARED_STATE;
         case MODIFIED:
-            sendData(addr, procNum); // send data to cache requesting it
             if (reqType == BUSRD) {
                 printf("MODIFIED -> SHARED \n");
                 return SHARED_STATE; // go to shared state
