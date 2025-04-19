@@ -1,0 +1,258 @@
+==== PROTOCOL: msi_invalidate_while_modified ====
+=== Testing: p0.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 207						      |	Ticks - 108
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=0, addr=0x5f60, proc=0): SHARED -> SHARED_MODIFI |	 permReq(read = 0, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+busReq(req=3, addr=0x5f60, proc=0): SHARED_MODIFIED -> MODIFI |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    <
+2	0	1	2	3	204		      |	2	0	1	2	3	105
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+3	1	2	3	4	205		      |	3	1	2	3	4	106
+4	1	2	3	4	206		      |	4	1	2	3	4	107
+==================
+
+=== Testing: p1.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p2.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p3.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+==== PROTOCOL: msi_modify_basic ====
+=== Testing: p0.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 209						      |	Ticks - 111
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=0, addr=0x5f60, proc=0): SHARED -> SHARED_MODIFI |	permReq(read = 0, addr = 0x5f60, proc = 0): SHARED_STATE -> M
+busReq(req=3, addr=0x5f60, proc=0): SHARED_MODIFIED -> MODIFI |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    <
+3	1	2	3	4	205		      |	3	1	2	3	4	106
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    |	4	1	2	3	4	107
+							      >	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+4	1	2	3	4	206		      |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    <
+5	2	3	106	107	207		      |	5	2	3	106	107	109
+6	2	3	107	108	208		      |	6	2	3	107	108	110
+==================
+
+=== Testing: p1.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p2.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 210						      |	Ticks - 111
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=0, addr=0x5f60, proc=0): SHARED -> SHARED_MODIFI |	permReq(read = 0, addr = 0x5f60, proc = 0): SHARED_STATE -> M
+busReq(req=3, addr=0x5f60, proc=0): SHARED_MODIFIED -> MODIFI |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    <
+5	2	3	106	107	208		      |	5	2	3	106	107	109
+6	2	3	107	108	209		      |	6	2	3	107	108	110
+==================
+
+=== Testing: p3.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+==== PROTOCOL: msi_multiple_lines ====
+=== Testing: p0.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x1f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x1f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x1f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x1f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x1f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x1f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x1f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x1f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x1f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x1f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p1.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x2f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x2f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x2f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x2f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x2f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x2f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x2f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x2f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x2f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x2f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p2.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 207						      |	Ticks - 108
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=0, addr=0x5f60, proc=0): SHARED -> SHARED_MODIFI |	 permReq(read = 0, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+busReq(req=3, addr=0x5f60, proc=0): SHARED_MODIFIED -> MODIFI |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    <
+2	0	1	2	3	204		      |	2	0	1	2	3	105
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+3	1	2	3	4	205		      |	3	1	2	3	4	106
+4	1	2	3	4	206		      |	4	1	2	3	4	107
+==================
+
+=== Testing: p3.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+==== PROTOCOL: msi_simple ====
+=== Testing: p0.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p1.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p2.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+=== Testing: p3.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	 permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> 
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+permReq(read=1, addr=0x5f60, proc=0): SHARED -> SHARED	      |	permReq(read = 1, addr = 0x5f60, proc = 0): SHARED_STATE -> S
+==================
+
+==== PROTOCOL: simple ====
+=== Testing: p0.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 205						      |	Ticks - 306
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0xf60, proc=0): INVALID -> INVALID_SHARE |	 [0] Address: 0xf60 is a Evict
+[0] Address: 0xf60 is a Evict				      <
+busReq(req=3, addr=0xf60, proc=0): INVALID_SHARED -> SHARED   |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID -> INVALID 
+2	0	1	2	3	204		      |	permReq(read = 1, addr = 0xf60, proc = 0): INVALID -> INVALID
+							      >	busReq(req = 3, addr = 0xf60, proc = 0): INVALID_SHARED -> SH
+							      >	 2	0	1	2	3	305
+==================
+
+=== Testing: p1.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+Ticks - 205						      |	Ticks - 306
+permReq(read=1, addr=0x5f60, proc=0): INVALID -> INVALID_SHAR |	permReq(read = 1, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_SHARED -> S
+permReq(read=1, addr=0x3f60, proc=0): INVALID -> INVALID_SHAR |	 [0] Address: 0x3f60 is a Evict
+[0] Address: 0x3f60 is a Evict				      <
+busReq(req=3, addr=0x3f60, proc=0): INVALID_SHARED -> SHARED  |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID -> INVALID 
+2	0	1	2	3	204		      |	permReq(read = 1, addr = 0x3f60, proc = 0): INVALID -> INVALI
+							      >	busReq(req = 3, addr = 0x3f60, proc = 0): INVALID_SHARED -> S
+							      >	 2	0	1	2	3	305
+==================
+
+=== Testing: p2.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=0, addr=0x5f60, proc=0): INVALID -> INVALID_MODI |	permReq(read = 0, addr = 0x5f60, proc = 0): INVALID -> INVALI
+busReq(req=3, addr=0x5f60, proc=0): INVALID_MODIFIED -> MODIF |	busReq(req = 3, addr = 0x5f60, proc = 0): INVALID_MODIFIED ->
+permReq(read=1, addr=0x5f60, proc=0): MODIFIED -> MODIFIED    |	permReq(read = 1, addr = 0x5f60, proc = 0): MODIFIED -> MODIF
+==================
+
+=== Testing: p3.trace ===
+Running REFERENCE (with refCoherence)...
+Running CUSTOM (without refCoherence)...
+=== DIFFERENCES ===
+permReq(read=1, addr=0x5e7ddfa0, proc=0): INVALID -> INVALID_ |	permReq(read = 1, addr = 0x5e7ddfa0, proc = 0): INVALID -> IN
+busReq(req=3, addr=0x5e7ddfa0, proc=0): INVALID_SHARED -> SHA |	busReq(req = 3, addr = 0x5e7ddfa0, proc = 0): INVALID_SHARED 
+permReq(read=1, addr=0x5e7ddfa0, proc=0): SHARED -> SHARED    |	 permReq(read = 1, addr = 0x5e7ddfa0, proc = 0): SHARED_STATE
+==================
+

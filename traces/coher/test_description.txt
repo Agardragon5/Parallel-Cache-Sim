@@ -1,0 +1,21 @@
+MSI simple:
+
+Very straightforward, just a bunch of loads to the same address,
+MI should cause a large number of invalidations, everything else should cause 0
+
+
+MSI modify basic:
+
+Same idea, load the same addr a bunch of time, but then P0 will store, and P1 will store,
+should trigger 8 invalidations
+
+MSI multiple lines:
+
+P2 and P3 share a line which P2 writes too, P0 and P1 doing their own things,
+we should only see 1 invalidation here 
+
+MSI invalidate while modified:
+
+Two PEs this time, which both try to store, the idea is that this should (hopefully), trigger 
+two invalidations, including one while a line is in the M state 
+
