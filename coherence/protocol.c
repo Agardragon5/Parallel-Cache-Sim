@@ -122,7 +122,7 @@ cacheMESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
         case INVALID: // same as with MSI
             *permAvail = 0;
             if (is_read) {
-                printf("INVALID -> INVALID_SHARED\n");
+                printf("INVALID -> INVALID_SHARED_EXCLUSIVE\n");
                 sendBusRd(addr, procNum);
                 return INVALID_SHARED;
             } else {
@@ -157,14 +157,16 @@ cacheMESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
             *permAvail = 1;
             return MODIFIED;
         case INVALID_MODIFIED: // everything down here shouldn't be happening
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
             *permAvail = 0;
+            printf("INVALID_MODIFIED -> INVALID_MODIFIED \n");
             return INVALID_MODIFIED;
         case INVALID_SHARED:
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
             *permAvail = 0;
+            printf("INVALID_SHARED_EXCLUSIVE -> INVALID_SHARED_EXCLUSIVE \n");
             return INVALID_SHARED;
         case SHARED_MODIFIED:
             printf("SHARED_MODIFIED -> SHARED_MODIFIED\n");
@@ -188,51 +190,56 @@ cacheMESIF(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
         case INVALID: 
             *permAvail = 0;
             if (is_read) {
-                printf("INVALID -> INVALID_SHARED\n");
+                printf("INVALID -> INVALID_EXCLUSIVE_FORWARD \n");
                 sendBusRd(addr, procNum);
                 return INVALID_SHARED;
             }
-            printf("INVALID -> INVALID_MODIFIED\n");
+            printf("INVALID -> INVALID_MODIFIED \n");
             sendBusWr(addr, procNum);
             return INVALID_MODIFIED;
-        case SHARED_STATE:
-            *permAvail = 1;
+        case SHARED_STATE: // same as with MSI
             if (is_read) {
-                printf("SHARED -> SHARED\n");
+                *permAvail = 1;
+                printf("SHARED -> SHARED \n");
                 return SHARED_STATE;
+            } else {
+                *permAvail = 0;
+                printf("SHARED -> SHARED_MODIFIED \n");
+                // sendData(addr, procNum); 
+                sendBusRd(addr, procNum);
+                return SHARED_MODIFIED;
             }
-            printf("SHARED -> MODIFIED\n");
-            sendBusWr(addr, procNum);
-            return MODIFIED;
         case EXCLUSIVE:
             *permAvail = 1;
             if (is_read) {
-                printf("EXCLUSIVE -> EXCLUSIVE\n");
+                printf("EXCLUSIVE -> EXCLUSIVE \n");
                 return EXCLUSIVE;
             }
-            printf("EXCLUSIVE -> MODIFIED\n");
+            printf("EXCLUSIVE -> MODIFIED \n");
             return MODIFIED;
         case FORWARD:
             *permAvail = 1;
             if (is_read) {
-                printf("FORWARD -> FORWARD\n");
+                printf("FORWARD -> FORWARD \n");
                 return FORWARD;
             }
-            printf("FORWARD -> MODIFIED\n");
+            printf("FORWARD -> MODIFIED \n");
             sendBusWr(addr, procNum);
-            return MODIFIED;
+            return SHARED_MODIFIED;
         case MODIFIED:
-            printf("MODIFIED -> MODIFIED\n");
+            printf("MODIFIED -> MODIFIED \n");
             *permAvail = 1;
             return MODIFIED;
             case INVALID_MODIFIED: // everything down here shouldn't be happening
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
+            printf("INVALID_MODIFIED -> INVALID_MODIFIED \n");
             *permAvail = 0;
             return INVALID_MODIFIED;
         case INVALID_SHARED:
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
+            printf("INVALID_EXCLUSIVE_FORWARD -> INVALID_EXCLUSIVE_FORWARD \n");
             *permAvail = 0;
             return INVALID_SHARED;
         default:
@@ -253,7 +260,7 @@ cacheMOESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
         case INVALID: // same as with MSI
             *permAvail = 0;
             if (is_read) {
-                printf("INVALID -> INVALID_SHARED\n");
+                printf("INVALID -> INVALID_SHARED_EXCLUSIVE\n");
                 sendBusRd(addr, procNum);
                 return INVALID_SHARED;
             } else {
@@ -264,14 +271,17 @@ cacheMOESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
             printf("INVALID -> INVALID\n");
             return INVALID;
         case SHARED_STATE: // same as with MSI
-            *permAvail = 1;
             if (is_read) {
-                printf("SHARED -> SHARED\n");
+                *permAvail = 1;
+                printf("SHARED -> SHARED \n");
                 return SHARED_STATE;
+            } else {
+                *permAvail = 0;
+                printf("SHARED -> SHARED_MODIFIED \n");
+                // sendData(addr, procNum); 
+                sendBusWr(addr, procNum);
+                return SHARED_MODIFIED;
             }
-            printf("SHARED -> MODIFIED\n");
-            sendBusWr(addr, procNum);
-            return MODIFIED;
         case EXCLUSIVE: // stay in current state if read, otherwise go to M silently
             *permAvail = 1;
             if (is_read) {
@@ -289,13 +299,15 @@ cacheMOESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
             printf("OWNED -> OWNED\n");
             return OWNED;
         case INVALID_MODIFIED: // everything down here shouldn't be happening
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+                    // is_read);
+            printf("INVALID_MODIFIED -> INVALID_MODIFIED\n");
             *permAvail = 0;
             return INVALID_MODIFIED;
         case INVALID_SHARED:
-            fprintf(stderr, "IM state on %lx, but request %d\n", addr,
-                    is_read);
+            // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
+            //         is_read);
+            printf("INVALID_SHARED_EXCLUSIVE -> INVALID_SHARED_EXCLUSIVE\n");
             *permAvail = 0;
             return INVALID_SHARED;
         default:
@@ -349,7 +361,6 @@ snoopMSI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
             printf("INVALID -> INVALID \n"); 
             return INVALID;
         case SHARED_STATE: // indicate that data is shared 
-            sendData(addr, procNum);
             if (reqType == BUSWR) {
                 printf("SHARED -> INVALID \n"); 
                 // if another processor tries to write, invalidate line
@@ -360,6 +371,7 @@ snoopMSI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
             // otherwise, just keep going
             return SHARED_STATE;
         case MODIFIED:
+            sendData(addr, procNum);
             if (reqType == BUSRD) {
                 printf("MODIFIED -> SHARED \n");
                 return SHARED_STATE; // go to shared state
@@ -454,15 +466,15 @@ snoopMESI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
         // if it's DATA, that means no other processors should have it
         case INVALID_SHARED:
             if (reqType == DATA) {
-                printf("INVALID_SHARED -> EXCLUSIVE\n");
+                printf("INVALID_SHARED_EXCLUSIVE -> EXCLUSIVE\n");
                 *ca = DATA_RECV;
                 return EXCLUSIVE;
             } else if (reqType == SHARED) {
-                printf("INVALID_SHARED -> SHARED\n");
+                printf("INVALID_SHARED_EXCLUSIVE -> SHARED\n");
                 *ca = DATA_RECV;
                 return SHARED;
-            } 
-            printf("INVALID_SHARED -> INVALID_SHARED\n");
+            }
+            printf("INVALID_SHARED_EXCLUSIVE -> INVALID_SHARED_EXCLUSIVE\n");
             return INVALID_SHARED;
             
         case INVALID_MODIFIED: // same as with MESI
@@ -474,7 +486,7 @@ snoopMESI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
             printf("INVALID_MODIFIED -> INVALID_MODIFIED\n");
             return INVALID_MODIFIED;
         case SHARED_MODIFIED:
-            if (reqType == DATA || reqType == SHARED) {
+            if (reqType == DATA) {
                 printf("SHARED_MODIFIED -> MODIFIED\n");
                 *ca = DATA_RECV;
                 return MODIFIED;
@@ -497,69 +509,77 @@ snoopMESIF(bus_req_type reqType, cache_action* ca, coherence_states currentState
     switch (currentState)
     {
         case INVALID:
-            printf("INVALID -> INVALID\n");
+            printf("INVALID -> INVALID \n");
             return INVALID;
         case INVALID_SHARED:
             if (reqType == DATA) {
-                printf("INVALID_SHARED -> EXCLUSIVE\n");
+                printf("INVALID_EXCLUSIVE_FORWARD -> EXCLUSIVE \n");
                 *ca = DATA_RECV;
                 return EXCLUSIVE;
             } else if (reqType == SHARED) {
-                printf("INVALID_SHARED -> SHARED\n");
+                printf("INVALID_EXCLUSIVE_FORWARD -> FORWARD \n");
                 *ca = DATA_RECV;
-                return SHARED_STATE;
+                return FORWARD;
             }
-            printf("INVALID_SHARED -> INVALID_SHARED\n");
+            printf("INVALID_EXCLUSIVE_FORWARD -> INVALID_EXCLUSIVE_FORWARD \n");
             return INVALID_SHARED;
         case INVALID_MODIFIED:
-            if (reqType == DATA || reqType == MODIFIED) {
-                printf("INVALID MODIFIED -> MODIFIED\n");
+            if (reqType == DATA) {
+                printf("INVALID MODIFIED -> MODIFIED \n");
                 *ca = DATA_RECV;
                 return MODIFIED;
             }
-            printf("INVALID MODIFIED -> INVALID MODIFIED\n");
+            printf("INVALID MODIFIED -> INVALID MODIFIED \n");
             return INVALID_MODIFIED;
         case SHARED_STATE:
             if (reqType == BUSWR) {
-                printf("SHARED -> INVALID\n");
+                printf("SHARED -> INVALID \n");
                 *ca = INVALIDATE;
                 return INVALID;
-            }
-            printf("SHARED -> SHARED");
+            } 
+            printf("SHARED -> SHARED \n");
             return SHARED_STATE;
         case EXCLUSIVE:
             if (reqType == BUSRD) {
-                printf("EXCLUSIVE -> FORWARD\n");
+                printf("EXCLUSIVE -> SHARED \n");
                 indicateShared(addr, procNum);
-                return FORWARD;
+                return SHARED;
             } else if (reqType == BUSWR) {
                 *ca = INVALIDATE;
-                printf("EXCLUSIVE -> INVALID\n");
+                printf("EXCLUSIVE -> INVALID \n");
                 sendData(addr, procNum);
                 return INVALID;
             }
-            printf("EXCLUSIVE -> EXCLUSIVE\n");
+            printf("EXCLUSIVE -> EXCLUSIVE \n");
             return EXCLUSIVE;
         case FORWARD:
             if (reqType == BUSWR) {
-                printf("FORWARD -> INVALID\n");
+                printf("FORWARD -> INVALID \n");
                 *ca = INVALIDATE;
                 sendData(addr, procNum);
                 return INVALID;
             }
-            printf("FORWARD -> FORWARD\n");
+            printf("FORWARD -> SHARED \n");
             indicateShared(addr, procNum);
-            return FORWARD;
+            return SHARED;
         case MODIFIED:
             if (reqType == BUSRD) { 
-                printf("MODIFIED -> SHARED\n");
+                printf("MODIFIED -> SHARED \n");
                 indicateShared(addr, procNum);
                 return SHARED_STATE;
             }
-            printf("MODIFIED -> INVALID\n");
+            printf("MODIFIED -> INVALID \n");
             sendData(addr, procNum);
             *ca = INVALIDATE;
             return INVALID;
+        case SHARED_MODIFIED:
+            if (reqType == DATA || reqType == SHARED) {
+                printf("SHARED_MODIFIED -> MODIFIED \n");
+                *ca = DATA_RECV;
+                return MODIFIED;
+            }
+            printf("SHARED_MODIFIED -> SHARED_MODIFIED \n");
+            return SHARED_MODIFIED;
         default:
             fprintf(stderr, "State %d not supported, found on %lx\n",
                     currentState, addr);
@@ -620,7 +640,6 @@ snoopMOESI(bus_req_type reqType, cache_action* ca, coherence_states currentState
         case OWNED:
             if (reqType == BUSWR) {
                 printf("OWNED -> INVALID\n");
-                sendData(addr, procNum);
                 return INVALID;
             }
             printf("OWNED -> OWNED\n");
@@ -630,15 +649,15 @@ snoopMOESI(bus_req_type reqType, cache_action* ca, coherence_states currentState
         // if it's DATA, that means no other processors should have it
         case INVALID_SHARED:
             if (reqType == DATA) {
-                printf("INVALID_SHARED -> EXCLUSIVE\n");
+                printf("INVALID_SHARED_EXCLUSIVE -> EXCLUSIVE\n");
                 *ca = DATA_RECV;
                 return EXCLUSIVE;
             } else if (reqType == SHARED) {
-                printf("INVALID_SHARED -> SHARED\n");
+                printf("INVALID_SHARED_EXCLUSIVE -> SHARED\n");
                 *ca = DATA_RECV;
                 return SHARED;
             } 
-            printf("INVALID_SHARED -> INVALID_SHARED\n");
+            printf("INVALID_SHARED_EXCLUSIVE -> INVALID_SHARED_EXCLUSIVE\n");
             return INVALID_SHARED;
             
         case INVALID_MODIFIED: // same as with MESI
@@ -649,6 +668,14 @@ snoopMOESI(bus_req_type reqType, cache_action* ca, coherence_states currentState
             }
             printf("INVALID_MODIFIED -> INVALID_MODIFIED\n");
             return INVALID_MODIFIED;
+        case SHARED_MODIFIED:
+            if (reqType == DATA || reqType == SHARED) {
+                printf("SHARED_MODIFIED -> MODIFIED \n");
+                *ca = DATA_RECV;
+                return MODIFIED;
+            }
+            printf("SHARED_MODIFIED -> SHARED_MODIFIED \n");
+            return SHARED_MODIFIED;
         default:
             fprintf(stderr, "State %d not supported, found on %lx\n",
                     currentState, addr);

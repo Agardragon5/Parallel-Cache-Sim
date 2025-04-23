@@ -7,7 +7,7 @@ CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
-TRACE_ROOT="traces/coher/msi" 
+TRACE_ROOT="traces/coher/mesif/temp" 
 compare_outputs() {
     local protocol_dir=$1
 
