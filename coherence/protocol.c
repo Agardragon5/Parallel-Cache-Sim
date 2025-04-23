@@ -223,7 +223,7 @@ cacheMESIF(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
                 printf("FORWARD -> FORWARD \n");
                 return FORWARD;
             }
-            printf("FORWARD -> MODIFIED \n");
+            printf("FORWARD -> FORWARD_MODIFIED \n"); //edited
             sendBusWr(addr, procNum);
             return SHARED_MODIFIED;
         case MODIFIED:
@@ -486,7 +486,7 @@ snoopMESI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
             printf("INVALID_MODIFIED -> INVALID_MODIFIED\n");
             return INVALID_MODIFIED;
         case SHARED_MODIFIED:
-            if (reqType == DATA) {
+            if (reqType == DATA || reqType == SHARED) { //edited
                 printf("SHARED_MODIFIED -> MODIFIED\n");
                 *ca = DATA_RECV;
                 return MODIFIED;

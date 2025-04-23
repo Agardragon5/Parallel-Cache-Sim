@@ -1,13 +1,16 @@
 #!/bin/bash
 
-# Configuration
+# Sim Configuration
 CONFIG="ex_coher.config"
 NUM_PROCESSORS="4" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="refMemory"
-TRACE_ROOT="traces/coher/mesif/temp" 
+TRACE_ROOT="traces/coher/msi" 
+
+#Validator Configuration 
+SIZE="160"
 compare_outputs() {
     local protocol_dir=$1
 
@@ -25,12 +28,13 @@ compare_outputs() {
     echo "=== DIFFERENCES ==="
     diff -y <(echo "$ref_output") <(echo "$custom_output") \
     --ignore-trailing-space --ignore-space-change \
-    --ignore-blank-lines| head -n 30
+    --ignore-blank-lines --side-by-side --width=$SIZE | head -n 80
     echo "=================="
     echo ""
 }
 
 # Main execution loop
+# for grand_dir in "" 
 for protocol_dir in "$TRACE_ROOT"/*/; do
     protocol_name=$(basename "$protocol_dir")
     echo "==== PROTOCOL: $protocol_name ===="
