@@ -229,7 +229,7 @@ cacheMESIF(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
             printf("MODIFIED -> MODIFIED \n");
             *permAvail = 1;
             return MODIFIED;
-            case INVALID_MODIFIED: // everything down here shouldn't be happening
+        case INVALID_MODIFIED: 
             // fprintf(stderr, "IM state on %lx, but request %d\n", addr,
             //         is_read);
             printf("INVALID_MODIFIED -> INVALID_MODIFIED \n");
@@ -530,7 +530,7 @@ snoopMESIF(bus_req_type reqType, cache_action* ca, coherence_states currentState
             printf("INVALID_EXCLUSIVE_FORWARD -> INVALID_EXCLUSIVE_FORWARD \n");
             return INVALID_SHARED;
         case INVALID_MODIFIED:
-            if (reqType == DATA) {
+            if (reqType == DATA || reqType == SHARED) {
                 printf("INVALID_MODIFIED -> MODIFIED \n");
                 *ca = DATA_RECV;
                 return MODIFIED;
@@ -573,6 +573,7 @@ snoopMESIF(bus_req_type reqType, cache_action* ca, coherence_states currentState
                 indicateShared(addr, procNum);
                 return SHARED_STATE;
             }
+            indicateShared(addr, procNum);
             printf("MODIFIED -> INVALID \n");
             *ca = INVALIDATE;
             return INVALID;
