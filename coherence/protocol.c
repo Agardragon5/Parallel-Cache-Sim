@@ -531,11 +531,11 @@ snoopMESIF(bus_req_type reqType, cache_action* ca, coherence_states currentState
             return INVALID_SHARED;
         case INVALID_MODIFIED:
             if (reqType == DATA) {
-                printf("INVALID MODIFIED -> MODIFIED \n");
+                printf("INVALID_MODIFIED -> MODIFIED \n");
                 *ca = DATA_RECV;
                 return MODIFIED;
             }
-            printf("INVALID MODIFIED -> INVALID MODIFIED \n");
+            printf("INVALID_MODIFIED -> INVALID_MODIFIED \n");
             return INVALID_MODIFIED;
         case SHARED_STATE:
             if (reqType == BUSWR) {
