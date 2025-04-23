@@ -24,8 +24,8 @@ for protocol_dir in "$TRACE_ROOT"/*/; do
     echo "=== Testing protocol: $protocol_name ==="
     ./cadss-engine -n "$NUM_PROCESSORS" -s "$CONFIG" -c "$CACHE" -t "$protocol_dir" \
                     -p "$PROCESSOR" -b "$BRANCH" -m "$MEMORY" \
-                    -o "$COHERENCE" \
-                    -v 
+                    # -o "$COHERENCE" \
+                    # -v 
     echo "-----"
     # done
 done
