@@ -2,11 +2,11 @@
 
 # Sim Configuration
 CONFIG="ex_coher.config"
-NUM_PROCESSORS="4" 
+NUM_PROCESSORS="2" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
-MEMORY="refMemory"
+MEMORY="memory"
 TRACE_ROOT="traces/coher/msi" 
 
 #Validator Configuration 

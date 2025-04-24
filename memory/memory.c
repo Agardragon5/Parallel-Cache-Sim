@@ -1,8 +1,8 @@
 #include <stdlib.h>
-
+#include<getopt.h>
 #include <memory.h>
 #include <interconnect.h>
-
+#include <stdio.h>
 #include "memory_internal.h"
 
 void registerInterconnect(interconn* interconnect);
@@ -11,15 +11,37 @@ int busReq(uint64_t addr, int procNum, void (*callback)(int, uint64_t));
 memory* self = NULL;
 memReq* pendingRequest = NULL;
 interconn* interComp;
+int useDirectory;
 int countDown = 0;
 
 // This is the same as "BUS_TIME".
 const int DRAM_FETCH_TICKS = 90;
 
+
 memory* init(memory_sim_args* args)
 {
     // TODO: Add "getopt" when we have actual arguments.
 
+    printf("%d args passed into memory, arg 0 is %s\n", args->arg_count, args->arg_list[0]);
+    printf("arg 1 is %s\n", args->arg_list[1]);
+    printf("arg 2 is %s\n", args->arg_list[2]);
+
+    int op;
+    int d;
+    optind = 0;
+    while ((op = getopt(args->arg_count, args->arg_list, "d:")) != -1)
+    {
+        switch (op)
+        {
+            case 'd':
+            useDirectory = atoi(optarg);
+                break;
+        }
+    }
+
+    printf("d is %d\n", useDirectory);
+ 
+    
     self = calloc(1, sizeof(memory));
     assert(self);
 

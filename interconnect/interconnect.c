@@ -25,14 +25,29 @@ typedef struct _bus_req {
     struct _bus_req* next;
 } bus_req;
 
+typedef struct _crossbar_req {
+    bus_req_type brt;
+    bus_req_state currentState;
+    uint64_t addr;
+    int sender;
+    int reciever;
+    uint8_t shared;
+    uint8_t data;
+    uint8_t dataAvail;
+    struct _crossbar_req *next;
+} crossbar_req;
+
 bus_req* pendingRequest = NULL;
 bus_req** queuedRequests;
+crossbar_req* pending_CB_Request = NULL;
+crossbar_req** queued_CB_Requests;
 interconn* self;
 coher* coherComp;
 memory* memComp;
 
 int CADSS_VERBOSE = 0;
 int processorCount = 1;
+int isCrossBar;
 
 static const char* req_state_map[] = {
     [NONE] = "None",
@@ -118,14 +133,24 @@ interconn* init(inter_sim_args* isa)
 {
     int op;
 
-    while ((op = getopt(isa->arg_count, isa->arg_list, "v")) != -1)
+    while ((op = getopt(isa->arg_count, isa->arg_list, "c:v")) != -1)
     {
         switch (op)
         {
+            case 'c':
+                isCrossBar = atoi(optarg);
+                if (isCrossBar < 0 || isCrossBar > 1) {
+                    fprintf(stderr,
+                        "Error: isCrossBar outside valid range - %d specified\n",
+                        isCrossBar);
+                }
+                break;
             default:
                 break;
         }
-    }
+    }   
+
+    printf("isCrossBar = %d\n", isCrossBar);
 
     queuedRequests = malloc(sizeof(bus_req*) * processorCount);
     for (int i = 0; i < processorCount; i++)
@@ -214,7 +239,7 @@ void busReq(bus_req_type brt, uint64_t addr, int procNum)
     }
 }
 
-int tick()
+int busTick()
 {
     memComp->si.tick();
 
@@ -307,6 +332,109 @@ int tick()
     }
 
     return 0;
+}
+
+int crossBarTick() {
+    memComp->si.tick();
+
+    if (self->dbgEnv.cadssDbgWatchedComp && !self->dbgEnv.cadssDbgNotifyState)
+    {
+        printInterconnState();
+    }
+
+    if (countDown > 0)
+    {
+        assert(pending_CB_Request != NULL);
+        countDown--;
+
+        // If the count-down has elapsed (or there hasn't been a
+        // cache-to-cache transfer, the memory will respond with
+        // the data.
+        if (pending_CB_Request->dataAvail)
+        {
+            pending_CB_Request->currentState = TRANSFERING_MEMORY;
+            countDown = 0;
+        }
+
+        if (countDown == 0)
+        {
+            if (pending_CB_Request->currentState == WAITING_CACHE)
+            {
+                // CHANGE THIS, NEED TO ALTER MEMORY TO ADD CROSSBAR REQ
+                countDown
+                    = memComp->busReq(pending_CB_Request->addr,
+                                      pending_CB_Request->procNum, memReqCallback);
+
+                pending_CB_Request->currentState = WAITING_MEMORY;
+
+                // CHANGE HOW REQUESTS ARE MADE FOR PROCESSORS
+                for (int i = 0; i < processorCount; i++)
+                {
+                    if (pending_CB_Request->procNum != i)
+                    {
+                        coherComp->busReq(pending_CB_Request->brt,
+                                          pending_CB_Request->addr, i);
+                    }
+                }
+
+                if (pending_CB_Request->data == 1)
+                {
+                    pending_CB_Request->brt = DATA;
+                }
+            }
+            else if (pending_CB_Request->currentState == TRANSFERING_MEMORY)
+            { 
+                bus_req_type brt
+                    = (pending_CB_Request->shared == 1) ? SHARED : DATA;
+                coherComp->busReq(brt, pending_CB_Request->addr,
+                                  pending_CB_Request->procNum);
+
+                interconnNotifyState();
+                free(pending_CB_Request);
+                pending_CB_Request = NULL;
+            }
+            else if (pending_CB_Request->currentState == TRANSFERING_CACHE)
+            {
+                bus_req_type brt = pending_CB_Request->brt;
+                if (pending_CB_Request->shared == 1)
+                    brt = SHARED;
+
+                coherComp->busReq(brt, pending_CB_Request->addr,
+                                  pending_CB_Request->procNum);
+
+                interconnNotifyState();
+                free(pending_CB_Request);
+                pending_CB_Request = NULL;
+            }
+        }
+    }
+    else if (countDown == 0)
+    {
+        for (int i = 0; i < processorCount; i++)
+        {
+            int pos = (i + lastProc) % processorCount;
+            if (queuedRequests[pos] != NULL)
+            {
+                pending_CB_Request = deqBusRequest(pos);
+                countDown = CACHE_DELAY;
+                pending_CB_Request->currentState = WAITING_CACHE;
+
+                lastProc = (pos + 1) % processorCount;
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+int tick()
+{
+    if (isCrossBar) {
+        printf("Not supported yet\n");
+        crossBarTick();
+        return -1;
+    }
+    return busTick();
 }
 
 void printInterconnState(void)
