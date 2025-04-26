@@ -9,4 +9,14 @@ typedef struct _memReq {
     void (*callback)(int, uint64_t);
 } memReq;
 
+typedef struct _procEntry {
+    int proc;
+    struct _procEntry *next;
+} procEntry;
+
+typedef struct _directoryEntry {
+    int dirty_bit;
+    procEntry *procs;
+} directoryEntry;
+
 #endif // MEMORY_INTERNAL_H

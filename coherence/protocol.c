@@ -21,6 +21,7 @@ void indicateShared(uint64_t addr, int procNum)
 }
 
 
+
 coherence_states
 cacheMI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
         uint64_t addr, int procNum)
@@ -180,6 +181,46 @@ cacheMESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
 
 }
 
+
+// process cache requests for MSI protocol
+coherence_states
+cacheDirectory(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
+    uint64_t addr, int procNum)
+{
+
+    switch (currentState)
+    {
+        case INVALID:
+            printf("INVALID -> DIR_WAITING\n");
+            *permAvail = 0;
+            if (is_read) {
+                sendBusRd(addr, procNum);
+            } else {
+                sendBusWr(addr, procNum);
+            }
+            return DIR_WAITING;
+        case DIR_WAITING:
+            printf("DIR_WAITING -> DIR_WAITING\n");
+            *permAvail = 0;
+            return DIR_WAITING;
+        case DIR_VALID:
+            if (is_read) {
+                printf("VALID -> VALID\n");
+                *permAvail = 1;
+                return DIR_VALID;
+            } 
+            printf("VALID -> DIR_WAITING\n");
+                // need permission to write;
+            *permAvail = 0;
+            return DIR_WAITING;
+        default:
+            fprintf(stderr, "State %d not supported, found on %lx\n",
+                    currentState, addr);
+            break;
+    }
+    return INVALID;
+}
+
 coherence_states 
 cacheMESIF(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
     uint64_t addr, int procNum)
@@ -324,6 +365,8 @@ cacheMOESI(uint8_t is_read, uint8_t* permAvail, coherence_states currentState,
     }
     return INVALID;
 }
+
+
 coherence_states
 snoopMI(bus_req_type reqType, cache_action* ca, coherence_states currentState,
         uint64_t addr, int procNum)
@@ -696,6 +739,47 @@ snoopMOESI(bus_req_type reqType, cache_action* ca, coherence_states currentState
             fprintf(stderr, "State %d not supported, found on %lx\n",
                     currentState, addr);
             break;
+    }
+    return INVALID;
+}
+
+// handle bus requests for MSI state
+coherence_states
+snoopDirectory(bus_req_type reqType, cache_action* ca, coherence_states currentState,
+    uint64_t addr, int procNum)
+{
+    *ca = NO_ACTION;
+    switch (currentState) 
+    {
+        case INVALID: // ignore if line isn't in cache 
+            fprintf(stderr, "Recieved request on invalid line for directory, aborting\n");
+            assert(0);
+            return INVALID;
+        case DIR_WAITING:
+            if (reqType == DATA) {
+                printf("DIR_WAITING -> VALID\n");
+                *ca = DATA_RECV;
+                return DIR_VALID;
+            } 
+            printf("recieved invalid notification for addr!!! ABORTING\n");
+            assert(0);
+            printf("DIR_WAITING -> DIR_WAITING\n");
+            return DIR_WAITING;
+        case DIR_VALID:
+            
+            if (reqType == BUSWR) {
+                printf("VALID -> INVALID\n");
+                *ca = INVALIDATE;
+                return INVALID;
+            }
+            printf("VALID -> VALID\n");
+            sendData(addr, procNum);
+            return DIR_VALID;
+        default:
+            // printf(stderr, "State %d not supported, found on %lx\n",
+                    // currentState, addr);
+            break;
+        
     }
     return INVALID;
 }

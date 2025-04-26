@@ -464,7 +464,6 @@ int main(int argc, char** argv)
         debugCheckNotif(&(inter_sim->dbgEnv));
         debugCheckNotif(&(mem_sim->dbgEnv));
     } while (progress);
-
     psim->finish(STDOUT_FILENO);
     psim->destroy();
     trace->destroy();
