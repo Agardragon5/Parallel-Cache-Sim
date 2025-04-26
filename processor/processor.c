@@ -176,7 +176,6 @@ int tick(void)
 
         free(nextOp);
     }
-
     return progress;
 }
 

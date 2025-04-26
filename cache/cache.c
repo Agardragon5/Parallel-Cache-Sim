@@ -1,6 +1,6 @@
 #include <cache.h>
 #include <trace.h>
-
+#include <stdio.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -98,6 +98,7 @@ void memoryRequest(trace_op* op, int processorNum, int64_t tag,
     // Simple model to only have one outstanding memory operation
     if (countDown != 0)
     {
+        printf("calling back\n");
         assert(pending.memCallback != NULL);
         pending.memCallback(pending.procNum, pending.tag);
     }

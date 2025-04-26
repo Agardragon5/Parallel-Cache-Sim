@@ -23,7 +23,7 @@ void registerCacheInterface(void (*callback)(int, int, int64_t));
 coher* init(coher_sim_args* csa)
 {
     int op;
-
+    
     while ((op = getopt(csa->arg_count, csa->arg_list, "s:")) != -1)
     {
         switch (op)
@@ -117,6 +117,9 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
         case MESIF:
             nextState = snoopMESIF(reqType, &ca, currentState, addr, processorNum);
             break;
+        case DIRECTORY:
+            nextState = snoopDirectory(reqType, &ca, currentState, addr, processorNum);
+            break;
         default:
             fprintf(stderr, "Undefined coherence scheme - %d\n", cs);
             break;
@@ -194,7 +197,10 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
             nextState = cacheMESIF(is_read, &permAvail, currentState, addr, 
                 processorNum);
             break;
-
+        case DIRECTORY:
+            nextState = cacheDirectory(is_read, &permAvail, currentState, addr, 
+                processorNum);
+            break;
         default:
             fprintf(stderr, "Undefined coherence scheme - %d\n", cs);
             break;
@@ -255,7 +261,6 @@ uint8_t invlReq(uint64_t addr, int processorNum)
         case MESIF:
             // TODO: Implement this.
             break;
-
         default:
             fprintf(stderr, "Undefined coherence scheme - %d\n", cs);
             break;

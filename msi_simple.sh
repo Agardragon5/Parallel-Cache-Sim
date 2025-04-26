@@ -7,13 +7,13 @@
 # ex_coher.config file with the number next to __coherence -s num. Num can be 
 # a value 0-4 where 0 is MI, 1 is MSI, 2 is MESI, 3 is MOESI, and 4 is MESIF. 
 CONFIG="ex_coher.config"
-NUM_PROCESSORS="2" 
+NUM_PROCESSORS="6" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
 MEMORY="memory"
 COHERENCE="refCoherence"
-TRACE_ROOT="traces/coher/temp" 
+TRACE_ROOT="traces/coher/updatedTests" 
  # Parent folder containing simple/, msi_simple/, etc.
 
 echo "Running all coherence protocol tests..."
