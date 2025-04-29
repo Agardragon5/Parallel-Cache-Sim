@@ -20,9 +20,9 @@ typedef enum _coherence_states
     SHARED_MODIFIED,
     FORWARD_MODIFIED,
     DIR_VALID,
-    DIR_WAITING
+    DIR_WAITING,
+    DIR_WAITING_FOR_WRITE
 } coherence_states;
-
 typedef enum _coherence_scheme
 {
     MI,

@@ -157,8 +157,11 @@ int getProcForRequest(uint64_t addr) {
 
     assert(entry);
     assert(entry->procs);
-
-    return entry->procs->proc;
+    procEntry *curr = entry->procs;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    return curr->proc;
 }
 
 /**

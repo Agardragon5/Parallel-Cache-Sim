@@ -15,6 +15,10 @@ coher* self = NULL;
 interconn* inter_sim = NULL;
 cacheCallbackFunc cacheCallback = NULL;
 
+//perf Counters
+int numBusReqs = 0;
+int numPermReqs = 0; 
+
 uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum);
 uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum);
 uint8_t invlReq(uint64_t addr, int processorNum);
@@ -86,6 +90,8 @@ void setState(uint64_t addr, int processorNum, coherence_states nextState)
 
 uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
 {
+    numBusReqs++; 
+
     if (processorNum < 0 || processorNum >= processorCount)
     {
         //error 
@@ -150,12 +156,14 @@ uint8_t busReq(bus_req_type reqType, uint64_t addr, int processorNum)
     {
         setState(addr, processorNum, nextState);
     }
+    printf("total number of BusReqs: %i \n", numBusReqs); 
 
     return 0;
 }
 
 uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
 {
+    numPermReqs++; 
     if (processorNum < 0 || processorNum >= processorCount)
     {
         // ERROR
@@ -206,6 +214,7 @@ uint8_t permReq(uint8_t is_read, uint64_t addr, int processorNum)
             break;
     }
 
+    printf("total number of permReqs: %i \n", numPermReqs); 
     setState(addr, processorNum, nextState);
     return permAvail;
 }

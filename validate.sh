@@ -2,7 +2,7 @@
 
 # Sim Configuration
 CONFIG="ex_coher.config"
-NUM_PROCESSORS="2" 
+NUM_PROCESSORS="4" 
 CACHE="simpleCache"
 PROCESSOR="refProcessor"
 BRANCH="refBranch"
